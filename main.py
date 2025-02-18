@@ -1,3 +1,5 @@
+import os
+
 MENU = {
     "espresso": {
         "ingredients": {
@@ -47,20 +49,33 @@ def resource_status_check(option):
     """Checks resource status if it is enough to dispense the coffee to the customer. """
     if option == "report":
         return resource_status()
-    if resources["water"] < MENU[option]["ingredients"]["water"]:
-        return 'Sorry there is not enough water'
-    elif resources["milk"] < MENU[option]["ingredients"]["milk"]:
-        return 'Sorry there is not enough milk'
-    elif resources["coffee"] < MENU[option]["ingredients"]["coffee"]:
-        return 'Sorry there is not enough water'
+    elif option == "espresso":
+        if resources["water"] < MENU[option]["ingredients"]["water"]:
+            return 'Sorry there is not enough water'
+        elif resources["coffee"] < MENU[option]["ingredients"]["coffee"]:
+            return 'Sorry there is not enough water'
+        else:
+            return True
     else:
-        return True
+        if resources["water"] < MENU[option]["ingredients"]["water"]:
+            return 'Sorry there is not enough water'
+        elif resources["milk"] < MENU[option]["ingredients"]["milk"]:
+            return 'Sorry there is not enough milk'
+        elif resources["coffee"] < MENU[option]["ingredients"]["coffee"]:
+            return 'Sorry there is not enough water'
+        else:
+            return True
 
 def resource_update(option):
     """Function to update the milk, water and coffee amount in dictonary"""
-    resources ["water"] = resources ["water"] - MENU [option]["ingredients"]["water"]
-    resources ["milk"] = resources ["milk"] - MENU [option]["ingredients"]["milk"]
-    resources ["coffee"] = resources ["coffee"] - MENU [option]["ingredients"]["coffee"]
+    if option != "espresso":
+        resources ["water"] = resources ["water"] - MENU [option]["ingredients"]["water"]
+        resources ["milk"] = resources ["milk"] - MENU [option]["ingredients"]["milk"]
+        resources ["coffee"] = resources ["coffee"] - MENU [option]["ingredients"]["coffee"]
+    else:
+        resources ["water"] = resources ["water"] - MENU [option]["ingredients"]["water"]
+        resources ["coffee"] = resources ["coffee"] - MENU [option]["ingredients"]["coffee"]
+
 
 def insert_coin ():
     """Function to take coins input from the customer"""
@@ -90,8 +105,8 @@ while condition:
         """)
     choice = input("What would you like😊: ").lower()
 
-    resource_state = resource_status_check(choice)
-    if resource_state != "off":
+    if choice != "off":
+        resource_state = resource_status_check(choice)
         if resource_state == True:
             insert_coin()
             money_status,return_amount = check_money(money,choice)
@@ -106,3 +121,4 @@ while condition:
     else:
         print ("Switching Off.........")
         condition = False
+os.system("pause")    
